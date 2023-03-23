@@ -1,0 +1,91 @@
+#!/bin/bash
+# Update packages and install dependencies
+
+export DEBIAN_FRONTEND=noninteractive
+sed -i "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" /etc/needrestart/needrestart.conf
+sudo apt update && sudo apt upgrade -y
+sudo apt-get install  language-pack-en-base -y
+sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
+add-apt-repository ppa:ondrej/php -y
+apt-get update -y
+apt-cache search php7
+sudo apt install -y wget util-linux apache2 mariadb-server mariadb-client php7.4 php7.4-curl php7.4-xml php7.4-cli php7.4-pdo php7.4-mysql php7.4-gd php7.4-mbstring php7.4-intl php7.4-bcmath curl sox mpg123 lame ffmpeg sqlite3 git unixodbc sudo dirmngr asterisk odbc-mariadb php7.4-ldap nodejs npm pkg-config libicu-dev
+sudo apt install -y linux-generic linux-headers-generic
+sudo apt autoremove --purge
+
+#!/bin/bash
+# Set mail server configuration options
+echo "postfix postfix/mailname string your.domain.com" | debconf-set-selections
+echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
+apt-get update
+apt-get install -y postfix
+
+# Install Asterisk and required packages
+sudo apt-get update
+
+systemctl stop asterisk
+systemctl disable asterisk
+cd /etc/asterisk
+mkdir DIST
+mv * DIST
+cp DIST/asterisk.conf .
+sed -i 's/(!)//' asterisk.conf
+touch modules.conf
+touch cdr.conf
+
+
+
+sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
+sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
+sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
+sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+a2enmod rewrite
+systemctl restart apache2
+rm /var/www/html/index.html
+
+
+cat <<EOF > /etc/odbcinst.ini
+[MySQL]
+Description = ODBC for MySQL (MariaDB)
+Driver = /usr/lib/x86_64-linux-gnu/odbc/libmaodbc.so
+FileUsage = 1
+EOF
+
+
+cat <<EOF > /etc/odbc.ini
+[MySQL-asteriskcdrdb]
+Description = MySQL connection to 'asteriskcdrdb' database
+Driver = MySQL
+Server = localhost
+Database = asteriskcdrdb
+Port = 3306
+Socket = /var/run/mysqld/mysqld.sock
+Option = 3
+EOF
+
+cd /usr/local/src
+wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
+tar zxvf freepbx-16.0-latest.tgz
+cd /usr/local/src/freepbx/
+./start_asterisk start
+./install -n
+fwconsole ma downloadinstall {asterisk-cli,blacklist,backup,queues,setcid,manager,api,asteriskinfo,cel,filestore}
+fwconsole reload
+cd /usr/share/asterisk
+mv sounds sounds-DIST
+ln -s /var/lib/asterisk/sounds sounds
+fwconsole restart
+cat <<EOF > /etc/systemd/system/freepbx.service
+[Unit]
+Description=FreePBX VoIP Server
+After=mariadb.service
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/fwconsole start -q
+ExecStop=/usr/sbin/fwconsole stop -q
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl enable freepbx
