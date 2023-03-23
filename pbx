@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "start" | tee -a monitor
 # Update packages and install dependencies
 
 export DEBIAN_FRONTEND=noninteractive
