@@ -14,7 +14,9 @@ echo "2" | tee -a monitor
 apt-get update -y
 apt-cache search php7
 sudo apt install -y wget util-linux apache2 mariadb-server mariadb-client php7.4 php7.4-curl php7.4-xml php7.4-cli php7.4-pdo php7.4-mysql php7.4-gd php7.4-mbstring php7.4-intl php7.4-bcmath curl sox mpg123 lame ffmpeg sqlite3 unixodbc sudo dirmngr asterisk odbc-mariadb php7.4-ldap nodejs npm pkg-config libicu-dev
+echo "2.5" | tee -a monitor
 sudo apt install -y linux-generic linux-headers-generic
+echo "2.8" | tee -a monitor
 sudo apt autoremove -y --purge
 echo "3" | tee -a monitor
 sleep 5
