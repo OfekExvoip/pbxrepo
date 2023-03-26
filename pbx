@@ -79,7 +79,7 @@ cd /usr/local/src/freepbx/
 ./install -n
 echo "8" | tee -a monitor
 echo "8" | tee -a /home/ubuntu/pbxrepo/monitor
-fwconsole ma downloadinstall {asterisk-cli,blacklist,backup,queues,setcid,manager,api,asteriskinfo,cel,filestore}
+fwconsole ma downloadinstall {asterisk-cli,blacklist,backup,queues,setcid,manager,api,asteriskinfo,cel,filestore,bulkhandler}
 fwconsole reload
 cd /usr/share/asterisk
 mv sounds sounds-DIST
