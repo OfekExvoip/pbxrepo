@@ -15,9 +15,8 @@ apt-get update -y
 apt-cache search php7
 sudo apt install -y wget util-linux apache2 mariadb-server mariadb-client php7.4 php7.4-curl php7.4-xml php7.4-cli php7.4-pdo php7.4-mysql php7.4-gd php7.4-mbstring php7.4-intl php7.4-bcmath curl sox mpg123 lame ffmpeg sqlite3 unixodbc sudo dirmngr asterisk odbc-mariadb php7.4-ldap nodejs npm pkg-config libicu-dev
 sudo apt install -y linux-generic linux-headers-generic
-sudo apt autoremove --purge
+sudo apt autoremove -y --purge
 echo "3" | tee -a monitor
-echo "finished installing dependencies" | tee -a monitor
 sleep 5
 
 #!/bin/bash
@@ -26,9 +25,9 @@ echo "postfix postfix/mailname string your.domain.com" | debconf-set-selections
 echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
 apt-get update
 apt-get install -y postfix
-
+echo "4" | tee -a monitor
 # Install Asterisk and required packages
-sudo apt-get update
+sudo apt-get -y update
 
 systemctl stop asterisk
 systemctl disable asterisk
@@ -39,7 +38,7 @@ cp DIST/asterisk.conf .
 sed -i 's/(!)//' asterisk.conf
 touch modules.conf
 touch cdr.conf
-
+echo "5" | tee -a monitor
 
 sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
 sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
@@ -48,6 +47,7 @@ sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 a2enmod rewrite
 systemctl restart apache2
 rm /var/www/html/index.html
+echo "6" | tee -a monitor
 
 echo "mv finished" | tee -a monitor
 cat <<EOF > /etc/odbcinst.ini
@@ -68,13 +68,16 @@ Port = 3306
 Socket = /var/run/mysqld/mysqld.sock
 Option = 3
 EOF
-echo "start installing pbx" | tee -a monitor
+
+echo "7" | tee -a monitor
+
 cd /usr/local/src
 wget http://mirror.freepbx.org/modules/packages/freepbx/7.4/freepbx-16.0-latest.tgz
 tar zxvf freepbx-16.0-latest.tgz
 cd /usr/local/src/freepbx/
 ./start_asterisk start
 ./install -n
+echo "8" | tee -a monitor
 fwconsole ma downloadinstall {asterisk-cli,blacklist,backup,queues,setcid,manager,api,asteriskinfo,cel,filestore}
 fwconsole reload
 cd /usr/share/asterisk
