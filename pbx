@@ -61,14 +61,13 @@ cat <<EOF > /etc/odbc.ini
 [MySQL-asteriskcdrdb]
 Description = MySQL connection to 'asteriskcdrdb' database
 Driver = MySQL
-Server = 10.0.1.54
+Server = 10.0.1.26
 Database = asteriskcdrdb
 Port = 3306
 Socket = /var/run/mysqld/mysqld.sock
 Option = 3
 EOF
 
-echo "7" | tee -a monitor
 echo "7" | tee -a /home/ubuntu/pbxrepo/monitor
 
 cd /usr/local/src
@@ -100,5 +99,4 @@ EOF
 systemctl daemon-reload
 systemctl enable freepbx
 
-echo "Finished!" tee -a monitor
 echo "Finished!" tee -a /home/ubuntu/pbxrepo/monitor
