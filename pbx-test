@@ -61,7 +61,7 @@ cat <<EOF > /etc/odbc.ini
 [MySQL-asteriskcdrdb]
 Description = MySQL connection to 'asteriskcdrdb' database
 Driver = MySQL
-Server = 10.0.1.26
+Server = 10.0.1.129
 Database = asteriskcdrdb
 Port = 3306
 Option = 3
