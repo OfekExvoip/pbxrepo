@@ -6,7 +6,7 @@ options = Options()
 options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
-newurl = "http://15.185.121.115/admin/config.php?display=sipsettings"
+newurl = "http://IPADD/admin/config.php?display=sipsettings"
 
 driver.get(newurl)
 
