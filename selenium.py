@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time 
 options = Options()
-#options.add_argument("--headless=new")
+options.add_argument("--headless=new")
 driver = webdriver.Chrome(options=options)
 
 newurl = "http://15.185.121.115/admin/config.php?display=sipsettings"
