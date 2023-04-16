@@ -7,7 +7,7 @@ api_token = "6269444087:AAEXS3_4IEVx8grBTd5ptzIvg3OF6L6wML0"
 chat_id = "-885207572"
 
 # Replace <YOUR_MESSAGE_TEXT> with the actual message you want to send
-message_text = "Pew Pew"
+message_text = "Ready Sr.Ofek"
 
 # Construct the API request URL
 url = f"https://api.telegram.org/bot{api_token}/sendMessage"
