@@ -18,7 +18,7 @@ sudo apt install -y linux-generic linux-headers-generic
 echo "2.8" | tee -a monitor
 sudo apt autoremove -y --purge
 echo "3" | tee -a monitor
-echo 'libvpb1 libvpb1/countrycode string 55' | sudo debconf-set-selections -v
+echo 'libvpb1 libvpb1/countrycode string 966' | sudo debconf-set-selections -v
 sleep 5
 wget https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
 tar xvf asterisk-18-current.tar.gz
